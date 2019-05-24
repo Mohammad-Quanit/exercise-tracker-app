@@ -1,5 +1,4 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 
@@ -12,7 +11,6 @@ const port = process.env.PORT || 5500;
 const app = express();
 app.use(cors());
 app.use(express.json());
-// app.use(bodyParser.json());
 
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false });
