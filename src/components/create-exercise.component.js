@@ -5,8 +5,16 @@ import MenuItem from '@material-ui/core/MenuItem';
 import TextField from '@material-ui/core/TextField';
 import DateFnsUtils from "@date-io/date-fns";
 import Button from '@material-ui/core/Button';
-import { DatePicker, MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import { MuiPickersUtilsProvider, KeyboardDatePicker } from "@material-ui/pickers";
+import swal from 'sweetalert';
+import axios from 'axios';
 
+let axiosConfig = {
+  headers: {
+    'Content-Type': 'application/json;charset=UTF-8',
+    "Access-Control-Allow-Origin": "*",
+  }
+};
 
 export default class CreateExercise extends Component {
   constructor(props) {
@@ -22,11 +30,16 @@ export default class CreateExercise extends Component {
   }
 
   componentDidMount() {
-    debugger;
-    this.setState({
-      users: ['Quanit'],
-      username: 'Quanit'
-    })
+    axios.get('http://localhost:4000/users/', axiosConfig)
+      .then(res => {
+        if (res.data.length > 0) {
+          this.setState({
+            users: res.data.map(user => user.username),
+            username: res.data[0].username
+          })
+        }
+      })
+      .catch(err => console.error(err));
   }
 
 
@@ -62,7 +75,10 @@ export default class CreateExercise extends Component {
       duration: this.state.duration,
       date: this.state.date
     }
-    console.log(exercise);
+    axios.post('http://localhost:4000/exercises/add', exercise, axiosConfig)
+      .then(res => /*swal("Succesfully Saved", res.data.username, "success")*/ console.log(res.data))
+      .catch(err => console.error(err));
+
     this.setState({
       username: '',
       description: '',
